@@ -15,21 +15,21 @@ public class NutsParserMethodsTest {
 	public void getInnerRings() throws IOException, ParseException {
 		// Read JSON array to pass in the method
 		NutsParser nutParser = new NutsParser();
-		nutParser.geojsonReader = new FileReader("src/test/resources/nuts_synthetic_one/test-nuts-three.geojson");
+		nutParser.geojsonReader = new FileReader("src/test/resources/nuts_synthetic_one/synthetic_nuts_with_3_coordinates.geojson");
 		JSONObject rootObject = (JSONObject) nutParser.jsonParser.parse(nutParser.geojsonReader);
 		JSONArray feature = (JSONArray) rootObject.get("features");
 		JSONObject firstObject = (JSONObject) feature.get(0);
 		JSONObject jsonGeometry = (JSONObject) firstObject.get("geometry");
 		JSONArray coordinates = (JSONArray) jsonGeometry.get("coordinates");
-
+		JSONArray inner_rings = nutParser.getInnerRings(coordinates);
+		
 		// Read JSON array to compare with the result
-		nutParser.geojsonReader = new FileReader("src/test/resources/nuts_synthetic_one/test-nuts-four.geojson");
+		nutParser.geojsonReader = new FileReader("src/test/resources/nuts_synthetic_one/synthetic_nuts_with_4_coordinates.geojson");
 		JSONObject rootObject1 = (JSONObject) nutParser.jsonParser.parse(nutParser.geojsonReader);
 		JSONArray feature1 = (JSONArray) rootObject1.get("features");
 		JSONObject firstObject1 = (JSONObject) feature1.get(0);
 		JSONObject jsonGeometry1 = (JSONObject) firstObject1.get("geometry");
 		JSONArray coordinatesExpected = (JSONArray) jsonGeometry1.get("coordinates");
-		JSONArray inner_rings = nutParser.getInnerRings(coordinates);
 		Assert.assertEquals("The result array returns inner-rings", coordinatesExpected, inner_rings);
 	}
 
@@ -37,21 +37,21 @@ public class NutsParserMethodsTest {
 	public void getCoordinatesLatLongFormat() throws IOException, ParseException {
 		// Read JSON array to pass in the method
 		NutsParser nutsParser = new NutsParser();
-		nutsParser.geojsonReader = new FileReader("src/test/resources/nuts_synthetic_one/test-nuts.geojson");
+		nutsParser.geojsonReader = new FileReader("src/test/resources/nuts_synthetic_one/synthetic_nuts_with_1_coordinates.geojson");
 		JSONObject rootObject = (JSONObject) nutsParser.jsonParser.parse(nutsParser.geojsonReader);
 		JSONArray feature = (JSONArray) rootObject.get("features");
 		JSONObject firstObject = (JSONObject) feature.get(0);
 		JSONObject jsonGeometry = (JSONObject) firstObject.get("geometry");
 		JSONArray coordinates = (JSONArray) jsonGeometry.get("coordinates");
+		JSONArray latLong = NutsParser.getCoordinatesLatLongFormat(coordinates);
 
 		// Read JSON array to compare with the result
-		nutsParser.geojsonReader = new FileReader("src/test/resources/nuts_synthetic_one/test-nuts-two.geojson");
+		nutsParser.geojsonReader = new FileReader("src/test/resources/nuts_synthetic_one/synthetic_nuts_with_2_coordinates.geojson");
 		JSONObject rootObject1 = (JSONObject) nutsParser.jsonParser.parse(nutsParser.geojsonReader);
 		JSONArray feature1 = (JSONArray) rootObject1.get("features");
 		JSONObject firstObject1 = (JSONObject) feature1.get(0);
 		JSONObject jsonGeometry1 = (JSONObject) firstObject1.get("geometry");
 		JSONArray coordinatesExpected = (JSONArray) jsonGeometry1.get("coordinates");
-		JSONArray latLong = NutsParser.getCoordinatesLatLongFormat(coordinates);
 		Assert.assertEquals("The result array will be equal to coordinates ", coordinatesExpected, latLong);
 	}
 
